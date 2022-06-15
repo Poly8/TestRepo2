@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="FB_TestFunction" Id="{106d1b4d-ee5a-41bd-8409-35353413369d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestFunction
+VAR_INPUT
+	n : int;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[n := 0;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

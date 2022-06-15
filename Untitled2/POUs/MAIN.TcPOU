@@ -4,6 +4,8 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	fbCylinder 		: 	FB_Cylinder;
+	fbCylinder1 	: 	FB_Cylinder;
+	fbTest			:	FB_TestFunction;
 	Cmd_GoToHP 		: 	BOOL;
 	Cmd_GoToWP 		: 	BOOL;
 	
@@ -35,15 +37,5 @@ fbCylinder(I_IsHP := Pal01_EK.I_613_3V2_HP,
 *)
 ]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="55" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="33" Count="4" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="60" Count="11" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="23" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
