@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="FB_Cylinder" Id="{5fa301b1-edb2-4339-85fb-9fd3cc3104f0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Cylinder
+VAR_INPUT
+	I_GoToHP 	:	BOOL;
+	I_GoToWP 	:	BOOL;
+	bSensorHP	:	BOOL;
+	bSensorWP	:	BOOL;
+	
+END_VAR
+VAR_OUTPUT
+	Q_CoilToHP : BOOL;
+	Q_CoilToWP : BOOL;
+END_VAR
+VAR
+	bEnable			:	BOOL 	:= TRUE;
+	bConfirmError	:	BOOL;
+
+	bSensorWP_check	:	BOOL;
+	bSensorHP_check	:	BOOL;
+	Cmd_ToHP_act	:	BOOL;
+	Cmd_ToWP_act	:	BOOL;
+
+	TON_HP	:	TON;
+	TON_WP	:	TON;
+	timeHP	:	TIME := T#5S;
+	timeWP	:	TIME := T#5S;
+	
+	iError	:	INT;
+	sError	:	STRING;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ConfirmError();
+
+IF bEnable  THEN
+	TON_HP(IN := Cmd_ToHP_act, PT := timeHP);
+	TON_WP(IN := Cmd_ToWP_act, PT := timeWP);
+
+	CheckErrors();
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Action Name="ConfirmError" Id="{b402ecb1-3ac3-4649-b2f9-79e8fba149b3}">
+      <Implementation>
+        <ST><![CDATA[(*
+IF SafetyIO.Common.Q_Safety_ErrorACK[1]  THEN
+	Enable := TRUE;
+END_IF
+*)
+
+
+IF bConfirmError THEN
+	bEnable := TRUE;
+	iError := 0;
+	Cmd_ToHP_act := FALSE;
+	Cmd_ToWP_act := FALSE;
+	bConfirmError := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="GoToHP" Id="{4bdd60dd-625f-40b0-b4e3-c09a52daa24f}">
+      <Implementation>
+        <ST><![CDATA[IF bEnable  THEN
+	Q_CoilToHP 	:=	TRUE;
+	Q_CoilToWP	:= 	FALSE;
+	Cmd_ToHP_act:=	TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="GoToWP" Id="{4cbba615-8858-40b7-9864-872ec30fcd3f}">
+      <Implementation>
+        <ST><![CDATA[IF bEnable  THEN
+	Q_CoilToHP 	:=	FALSE;
+	Q_CoilToWP	:= 	TRUE;
+	Cmd_ToWP_act:=	TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="CheckErrors" Id="{a2444354-b0d2-44c3-bb0a-177409c7a92f}">
+      <Implementation>
+        <ST><![CDATA[IF bSensorWP THEN
+	bSensorWP_check	:= TRUE;
+ELSIF bSensorHP THEN
+	bSensorHP_check	:= TRUE;
+END_IF
+
+//Control Errors for WP
+IF TON_WP.Q AND NOT bSensorWP THEN
+	IF bSensorWP_check THEN
+		iError := 3;
+		bSensorWP_check := FALSE;
+	ELSE
+		iError := 1;
+	END_IF
+	
+//Control Errors for HP
+ELSIF TON_HP.Q AND NOT bSensorHP THEN
+	IF bSensorHP_check THEN
+		iError := 4;
+		bSensorHP_check := FALSE;
+	ELSE
+		iError := 2;
+	END_IF
+	
+//Control for 'Both sensors error'
+ELSIF
+	bSensorHP AND bSensorWP THEN
+	iError := 5;
+END_IF
+
+IF iError <> 0 THEN
+	bEnable := FALSE;
+END_IF
+
+CASE iError OF
+	0:	sError := 'OK';
+	1:	sError := 'ERROR: Cylinder didnt reach WP on time';
+	2:	sError := 'ERROR: Cylinder didnt reach HP on time';
+	3:	sError := 'ERROR: Cylinder leaved HP';
+	4:	sError := 'ERROR: Cylinder leaved WP';
+	5:	sError := 'ERROR: Both sensors for HP and WP activated';
+	
+END_CASE 
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_Cylinder">
+      <LineId Id="829" Count="0" />
+      <LineId Id="934" Count="0" />
+      <LineId Id="830" Count="2" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="902" Count="0" />
+      <LineId Id="844" Count="0" />
+      <LineId Id="901" Count="0" />
+      <LineId Id="682" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Cylinder.ConfirmError">
+      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Cylinder.GoToHP">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Cylinder.GoToWP">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Cylinder.CheckErrors">
+      <LineId Id="64" Count="1" />
+      <LineId Id="4" Count="2" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="7" Count="7" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="15" Count="7" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="60" Count="2" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

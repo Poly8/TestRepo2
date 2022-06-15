@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="MAIN" Id="{a1866da6-1c42-405c-890e-6431b60be7d1}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fbCylinder 		: 	FB_Cylinder;
+	Cmd_GoToHP 		: 	BOOL;
+	Cmd_GoToWP 		: 	BOOL;
+	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbCylinder();
+
+IF Cmd_GoToHP THEN
+	fbCylinder.GoToHP();
+	Cmd_GoToHP := FALSE;
+ELSIF Cmd_GoToWP THEN
+	fbCylinder.GoToWP();
+	Cmd_GoToWP := FALSE;	
+END_IF
+
+//SafetyIO.Common.Q_Safety_Run[1] := TRUE;
+//SafetyIO.Common.Q_Safety_ErrorACK[1] := SafetyIO.I074_Btn_Reset;
+
+(*
+fbCylinder(I_IsHP := Pal01_EK.I_613_3V2_HP,
+	I_ISWP := Pal01_EK.I_614_3V2_WP,
+	I_GoToHP 	:= Cmd_GoToHP,
+	I_GoToWP 	:= Cmd_GoToWP,
+	Q_CoilToHP => ValveTerminal.YV9_HP,
+	Q_CoilToWP => ValveTerminal.YV9_WP
+	);
+*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="55" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="33" Count="4" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="60" Count="11" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
