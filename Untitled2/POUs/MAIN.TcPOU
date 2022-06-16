@@ -5,7 +5,10 @@
 VAR
 	fbCylinder 		: 	FB_Cylinder;
 	fbCylinder1 	: 	FB_Cylinder;
+	fbCylinder2 	: 	FB_Cylinder;
 	fbTest			:	FB_TestFunction;
+	fbTest2			:	FB_Test2;
+	
 	Cmd_GoToHP 		: 	BOOL;
 	Cmd_GoToWP 		: 	BOOL;
 	

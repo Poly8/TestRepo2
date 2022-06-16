@@ -23,6 +23,9 @@
     <Compile Include="POUs\FB_Cylinder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Test2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_TestFunction.TcPOU">
       <SubType>Code</SubType>
     </Compile>
