@@ -8,6 +8,8 @@ VAR
 	fbCylinder2 	: 	FB_Cylinder;
 	fbTest			:	FB_TestFunction;
 	fbTest2			:	FB_Test2;
+	fbTest3			:	FB_Test3;
+	
 	
 	Cmd_GoToHP 		: 	BOOL;
 	Cmd_GoToWP 		: 	BOOL;
