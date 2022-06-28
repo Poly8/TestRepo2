@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="FB_DefineAlarm" Id="{c8a1bd9a-afbf-43e4-a2cf-0ee88453089a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DefineAlarm
+VAR_INPUT
+	
+	stEventEntry 		:	TcEventEntry;
+	bWithConfirmation 	:	BOOL;
+	ipSourceInfo		:	I_TcSourceInfo;
+	I_input				:	BOOL;
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	
+	fbTcAlarm			:	FB_TcAlarm;
+	I_input_RT			:	R_TRIG;
+	ClearAlarm_RT		:	R_TRIG;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[I_input_RT(CLK := I_input);
+
+IF I_input_RT.Q THEN
+	
+	fbTcAlarm.createEx(stEventEntry, bWithConfirmation, ipSourceInfo);
+	fbTcAlarm.Raise(0);
+	
+END_IF
+
+
+IF	Inputs.btn_ClearAlarm THEN
+	
+	fbTcAlarm.Clear (0, FALSE);
+	
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
